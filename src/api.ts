@@ -5,20 +5,16 @@ import {
   coins,
 } from '@cosmjs/launchpad';
 
+const httpUrl = 'http://localhost:1317';
+
 export const registerTransaction = async (
   mnemonic: string,
   senderAddress: string,
   recipientAddress: string,
   transferAmount: number
 ) => {
-  const httpUrl = 'http://localhost:1317';
   try {
-    // const senderAddress = 'cosmos1pkptre7fdkl6gfrzlesjjvhxhlc3r4gmmk8rs6';
-    // const recipientAddress = 'cosmos17yg9mssjenmc3jkqth6ulcwj9cxujrxxzezwta';
     const convertedTransferAmount = coins(transferAmount, 'ucosm');
-
-    // const mnemonic =
-    //   'economy stock theory fatal elder harbor betray wasp final emotion task crumble siren bottom lizard educate guess current outdoor pair theory focus wife stone';
     const wallet = await Secp256k1HdWallet.fromMnemonic(mnemonic);
 
     const client = new SigningCosmosClient(httpUrl, senderAddress, wallet);
@@ -28,14 +24,14 @@ export const registerTransaction = async (
       convertedTransferAmount
     );
 
-    console.log(result.transactionHash);
+    return { error: false, result: result.transactionHash };
   } catch (err) {
-    console.log(err);
+    console.log(err.message);
+    return { error: true, result: err.message };
   }
 };
 
 export const findTransaction = async () => {
-  const httpUrl = 'http://localhost:1317';
   const client = new CosmosClient(httpUrl);
   const query = {
     id: 'F76F6DFE48743DD2120EE294647DDD81CFA75CF8C48E8841C65F9196B34EFD38',

@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
+import InputField from './InputField';
 import { registerTransaction } from './api';
 
 type Inputs = {
   mnemonic: string;
   senderAddress: string;
   recipientAddress: string;
-  amount: number;
+  amount: string;
 };
 
 const TransactionForm: React.FC<{}> = () => {
@@ -13,63 +14,65 @@ const TransactionForm: React.FC<{}> = () => {
     mnemonic: '',
     senderAddress: '',
     recipientAddress: '',
-    amount: 0,
+    amount: '',
   });
+  const [transactionId, setTransactionId] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const onInputChange = (e: { target: HTMLInputElement }): void => {
     const { name, value } = e.target;
     updateInputs({ ...inputs, [name]: value });
-    console.log(inputs);
   };
 
-  const onRegisterTransaction = (e: React.SyntheticEvent<EventTarget>) => {
+  const onRegisterTransaction = async (
+    e: React.SyntheticEvent<EventTarget>
+  ) => {
     e.preventDefault();
-    console.log('submit');
+    const { mnemonic, senderAddress, recipientAddress, amount } = inputs;
+    const response = await registerTransaction(
+      mnemonic,
+      senderAddress,
+      recipientAddress,
+      parseInt(amount)
+    );
+    if (!response.error) {
+      setTransactionId(response.result);
+    } else {
+      setError(response.result);
+    }
   };
 
   return (
-    <form className='formWrapper' onSubmit={onRegisterTransaction}>
-      <fieldset>
-        <legend>Make a Transaction</legend>
-        <label htmlFor='mnemonic'>
-          <span className='label'>mnemonic</span>
-          <input
-            type='text'
+    <div className='registerTransactionWrapper'>
+      <form className='formWrapper' onSubmit={onRegisterTransaction}>
+        <fieldset>
+          <legend>Make a Transaction</legend>
+          <InputField
             name='mnemonic'
-            onChange={onInputChange}
-            required
+            label='mnemonic'
+            onInputChange={onInputChange}
           />
-        </label>
-        <label htmlFor='senderAddress'>
-          <span className='label'>Sender Address</span>
-          <input
-            type='text'
+          <InputField
             name='senderAddress'
-            onChange={onInputChange}
-            required
+            label='Sender Address'
+            onInputChange={onInputChange}
           />
-        </label>
-        <label htmlFor='recipientAddress'>
-          <span className='label'>Recipient Address</span>
-          <input
-            type='text'
+          <InputField
             name='recipientAddress'
-            onChange={onInputChange}
-            required
+            label='Recipient Address'
+            onInputChange={onInputChange}
           />
-        </label>
-        <label htmlFor='amount'>
-          <span className='label'>Amount (in ucosm)</span>
-          <input
-            type='number'
+          <InputField
             name='amount'
-            onChange={onInputChange}
-            required
+            label='Amount'
+            onInputChange={onInputChange}
           />
-        </label>
-        <button type='submit'>Submit</button>
-      </fieldset>
-    </form>
+          <button type='submit'>Submit</button>
+        </fieldset>
+      </form>
+      {transactionId && <div>Transaction ID: {transactionId}</div>}
+      {error && <div>The following error occured: {error}</div>}
+    </div>
   );
 };
 

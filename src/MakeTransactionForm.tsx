@@ -64,14 +64,17 @@ const TransactionForm: React.FC<{}> = () => {
           />
           <InputField
             name='amount'
-            label='Amount'
+            label='Amount 
+            (in ucosm)'
             onInputChange={onInputChange}
           />
           <button type='submit'>Submit</button>
         </fieldset>
       </form>
       {transactionId && <div>Transaction ID: {transactionId}</div>}
-      {error && <div>The following error occured: {error}</div>}
+      {error && (
+        <div className='error'>The following error occured: {error}</div>
+      )}
     </div>
   );
 };

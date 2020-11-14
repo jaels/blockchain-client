@@ -31,19 +31,23 @@ export const registerTransaction = async (
   }
 };
 
-export const findTransaction = async () => {
+export const findTransaction = async (id: string) => {
   const client = new CosmosClient(httpUrl);
   const query = {
-    id: 'F76F6DFE48743DD2120EE294647DDD81CFA75CF8C48E8841C65F9196B34EFD38',
+    id: id,
   };
-  const result = await client.searchTx(query);
-  console.log(result);
   try {
-    const result = await fetch(`${httpUrl}/txs?message.module=bank`);
-    const data = await result.json();
-
-    console.log(data);
+    const result = await client.searchTx(query);
+    // console.log(result);
+    const {
+      from_address,
+      to_address,
+      amount,
+    } = result[0].tx.value.msg[0].value;
+    const details = { from_address, to_address, amount: amount[0] };
+    return { error: false, result: details };
   } catch (err) {
     console.log(err);
+    return { error: true, result: err.message };
   }
 };

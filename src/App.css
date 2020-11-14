@@ -14,3 +14,7 @@ label {
   flex-direction: column;
   margin-bottom: 20px;
 }
+
+.error {
+  color: red;
+}

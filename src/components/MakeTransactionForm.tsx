@@ -1,25 +1,27 @@
 import React, { useState } from 'react';
 import InputField from './InputField';
-import { registerTransaction } from './api';
+import Error from './Error';
+import { registerTransaction } from '../api';
 
-type Inputs = {
+interface Inputs {
   mnemonic: string;
   senderAddress: string;
   recipientAddress: string;
   amount: string;
-};
+}
 
 const TransactionForm: React.FC<{}> = () => {
-  const [inputs, updateInputs] = useState<Inputs>({
+  const initialInputState = {
     mnemonic: '',
     senderAddress: '',
     recipientAddress: '',
     amount: '',
-  });
+  };
+  const [inputs, updateInputs] = useState<Inputs>(initialInputState);
   const [transactionId, setTransactionId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const onInputChange = (e: { target: HTMLInputElement }): void => {
+  const onInputChange = (e: { target: HTMLInputElement }) => {
     const { name, value } = e.target;
     updateInputs({ ...inputs, [name]: value });
   };
@@ -28,6 +30,8 @@ const TransactionForm: React.FC<{}> = () => {
     e: React.SyntheticEvent<EventTarget>
   ) => {
     e.preventDefault();
+    setTransactionId(null);
+    setError(null);
     const { mnemonic, senderAddress, recipientAddress, amount } = inputs;
     const response = await registerTransaction(
       mnemonic,
@@ -43,10 +47,10 @@ const TransactionForm: React.FC<{}> = () => {
   };
 
   return (
-    <div className='registerTransactionWrapper'>
-      <form className='formWrapper' onSubmit={onRegisterTransaction}>
+    <div className='formWrapper'>
+      <form className='form' onSubmit={onRegisterTransaction}>
         <fieldset>
-          <legend>Make a Transaction</legend>
+          <legend className='formTitle'>Make a Transaction</legend>
           <InputField
             name='mnemonic'
             label='mnemonic'
@@ -68,13 +72,17 @@ const TransactionForm: React.FC<{}> = () => {
             (in ucosm)'
             onInputChange={onInputChange}
           />
-          <button type='submit'>Submit</button>
+          <button className='submitButton' type='submit'>
+            Submit
+          </button>
         </fieldset>
       </form>
-      {transactionId && <div>Transaction ID: {transactionId}</div>}
-      {error && (
-        <div className='error'>The following error occured: {error}</div>
+      {transactionId && (
+        <div className='detailsArea'>
+          <strong>Transaction ID:</strong> {transactionId}
+        </div>
       )}
+      {error && <Error error={error} />}
     </div>
   );
 };

@@ -9,7 +9,7 @@ type Props = {
 const InputField: React.FC<Props> = ({ name, label, onInputChange }) => {
   return (
     <label htmlFor={name}>
-      <span>{label}</span>
+      <span className='inputTitle'>{label}</span>
       <input
         type={name === 'amount' ? 'number' : 'text'}
         name={name}

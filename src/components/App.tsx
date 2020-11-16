@@ -2,7 +2,7 @@ import React from 'react';
 import MakeTransactionForm from './MakeTransactionForm';
 import FindTransactionForm from './FindTransactionForm';
 
-import './App.css';
+import '../App.css';
 
 const App: React.FC<{}> = () => {
   return (

@@ -1,20 +1,72 @@
-.App {
-  display: flex;
-  padding: 30px;
+body {
+  font-family: 'Helvetica Neue', sans-serif;
+  background-color: #E0E0E0;
 }
 
-.registerTransactionWrapper {
+.App {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 30px;
+  justify-content: center;
+}
+
+.formWrapper {
   display: flex;
   flex-direction: column;
-  width: 50%;
+  width: 580px;
+  max-width: 600px;
+  margin-right: 15px;
+}
+
+.formTitle {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.form {
+  margin-bottom: 20px;
+}
+
+fieldset {
+  padding: 15px;
 }
 
 label {
   display: flex;
   flex-direction: column;
+  margin-bottom: 25px;
+}
+
+.inputTitle {
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.submitButton {
+  padding: 6px;
+  border-radius: 10rem;
+  color: #484848;
+  background: white;
+  font-size: 14px;
+  transition: all .3s;
+  cursor: pointer
+}
+
+.submitButton:hover {
+  color: white;
+  background: #484848;
+}
+
+.detailsArea {
+  border: 1px solid green;
+  padding: 15px;
+  overflow-wrap: break-word;
   margin-bottom: 20px;
 }
 
 .error {
   color: red;
+  border: 1px solid red;
+  padding: 15px;
+  margin-bottom: 20px;
 }

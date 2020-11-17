@@ -7,12 +7,19 @@ import {
 
 const httpUrl = 'http://localhost:1317';
 
+export type TransactionDetails = {
+  from_address: string;
+  to_address: string;
+  amount: { amount: string; denom: string };
+  time: string;
+};
+
 export const registerTransaction = async (
   mnemonic: string,
   senderAddress: string,
   recipientAddress: string,
   transferAmount: number
-) => {
+): Promise<{ error: boolean; result: string }> => {
   try {
     const convertedTransferAmount = coins(transferAmount, 'ucosm');
     const wallet = await Secp256k1HdWallet.fromMnemonic(mnemonic);
@@ -29,7 +36,9 @@ export const registerTransaction = async (
   }
 };
 
-export const findTransaction = async (id: string) => {
+export const findTransaction = async (
+  id: string
+): Promise<{ error: boolean; result: TransactionDetails } | any> => {
   const client = new CosmosClient(httpUrl);
   const query = {
     id: id,

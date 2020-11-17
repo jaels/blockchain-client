@@ -1,14 +1,7 @@
 import React, { useState } from 'react';
 import InputField from './InputField';
 import Error from './Error';
-import { findTransaction } from '../api';
-
-interface TransactionDetails {
-  from_address: string;
-  to_address: string;
-  amount: { amount: string; denom: string };
-  time: string;
-}
+import { findTransaction, TransactionDetails } from '../api';
 
 const FindTransactionForm: React.FC<{}> = () => {
   const [input, updateInput] = useState<string>('');
